@@ -1,15 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>タイトル</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Document</title>
 </head>
 <body>
-  <main id="app">
-    <!-- コンテンツ -->
-  </main>
-  <script src="main.js" defer></script>
+    <h1 id="enemy">あいて</h1>
+    <img src="./images/thing.png" id="enemy-image" class="img">
+    <p id="enemy-text">何を出そうかな</p>
+    <p id="progress-text">進捗：0/5戦 現在：0勝（勝率 0%）</p>
+    <p id="final-result"></p>
+
+    <img src="./images/question.png" id="enemy-hands-image" class="img">
+    <img src="./images/question.png" id="my-hands-image" class="img">
+    <button id="rock-hand">グー</button>
+    <button id="scissors-hand">チョキ</button>
+    <button id="paper-hand">パー</button>
+    <button id="retry-btn" disabled>もう一度挑戦</button>
+    <h3>戦績履歴</h3>
+    <ul id="history"></ul>
+    <script src="./main.js"></script>
+    
 </body>
 </html>
