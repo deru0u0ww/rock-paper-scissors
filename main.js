@@ -3,24 +3,30 @@ const $ =(sel)=> document.querySelector(sel);
 const $rock                 = $('.rock');
 const $scissors             = $('.scissors');
 const $paper                = $('.paper');
-const $computerChoiceImage  = $('.computer-choiced-image');
-const $computerChoice       = $('.computer-choice');
+const $cpuChoiceImage       = $('.cpu-choiced-image');
+const $cpuChoice            = $('.cpu-choice');
 const $myHandImage          = $('.my-hands-image');
 const $retryButton          = $('.retry-button');
 const $progressMessage      = $('.progress-message');
-const $computerImage        = $('.computer-image');
+const $cpuImage             = $('.cpu-image');
 const $historyList          = $('.history');
 const $finalResult          = $('.final-result');
 
 //データ
-const computerChoice = [ 'rock' , 'scissors' , 'paper'];
+const cpuChoice = [ 'rock' , 'scissors' , 'paper'];
 const handsImage     = {
         rock:       './images/rock.png',
         scissors:   './images/scissors.png',
         paper:      './images/paper.png',
 }
-let roundCount = 0;
-let winCount = 0;
+const faceImage      = {
+        angry   :      './images/angry.png',
+        happy   :      './images/happy.png',
+        thing   :      './images/thing.png',
+        question:      './images/question.png',
+}
+let roundCount   = 0;
+let winCount     = 0;
 const MAX_ROUNDS = 5;
 //関数---------------
 function setButtonsEnabled(enabled) {
@@ -49,42 +55,42 @@ const played = roundCount;
             $finalResult.textContent = '';
         }
 }
-function getRandomHand() { return computerChoice[Math.floor(Math.random()*computerChoice.length)]; }
+function getRandomHand() { return cpuChoice[Math.floor(Math.random()*cpuChoice.length)]; }
 function playRound(myHand) {
     if(roundCount >= MAX_ROUNDS) return;
     let result               = '';
-    const computer           = getRandomHand();
+    const cpu                = getRandomHand();
     const $li                = document.createElement('li');
     $myHandImage.src         = handsImage[myHand];
-    $computerChoiceImage.src = `./images/${computer}.png`;
-    if (myHand === computer) {
+    $cpuChoiceImage.src      = handsImage[cpu];
+    if (myHand === cpu) {
             result = 'あなた：あいこ';
-            $computerImage.src = './images/thing.png';
+            $cpuImage.src = faceImage.thing;
         } else if (
-            (myHand === 'rock' && computer === 'scissors') ||
-            (myHand === 'scissors' && computer === 'paper') ||
-            (myHand === 'paper' && computer === 'rock')
+            (myHand === 'rock' && cpu === 'scissors') ||
+            (myHand === 'scissors' && cpu === 'paper') ||
+            (myHand === 'paper' && cpu === 'rock')
         ) {
             result = 'あなた：勝ち';
-            $computerImage.src = './images/angry.png';
+            $cpuImage.src = faceImage.angry;
             winCount++;
         } else {
             result = 'あなた：負け';
-            $computerImage.src = './images/happy.png';
+            $cpuImage.src = faceImage.happy;
         }
-        $computerChoice.textContent = result;
+        $cpuChoice.textContent = result;
         roundCount++;
-        $li.textContent = `${roundCount}戦目:あなた=${myHand}、あいて=${computer} → ${result}`;
+        $li.textContent = `${roundCount}戦目:あなた=${myHand}、あいて=${cpu} → ${result}`;
         $historyList.appendChild($li);
         update();
 }
 function reset() {
     roundCount                   = 0;
     winCount                     = 0;
-    $computerChoiceImage.src     = './images/question.png';
-    $myHandImage.src             = './images/question.png';
-    $computerImage.src           = './images/thing.png';
-    $computerChoice.textContent  = '何を出そうかな';
+    $cpuChoiceImage.src     = faceImage.question;
+    $myHandImage.src             = faceImage.question;
+    $cpuImage.src           = faceImage.thing;
+    $cpuChoice.textContent  = '何を出そうかな';
     $finalResult.textContent     = '';
     $progressMessage.textContent = `進捗：0/${MAX_ROUNDS}戦 現在：0勝（勝率 0%）`;
     $historyList.replaceChildren();
