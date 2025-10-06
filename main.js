@@ -3,7 +3,7 @@ const $ =(sel)=> document.querySelector(sel);
 const $rock                 = $('.rock');
 const $scissors             = $('.scissors');
 const $paper                = $('.paper');
-const $computerChoiceImage  = $('.conputer-choiced-image');
+const $computerChoiceImage  = $('.computer-choiced-image');
 const $computerChoice       = $('.computer-choice');
 const $myHandImage          = $('.my-hands-image');
 const $retryButton          = $('.retry-button');
@@ -21,7 +21,7 @@ const handsImage     = {
 }
 let roundCount = 0;
 let winCount = 0;
-
+const MAX_ROUNDS = 5;
 //関数---------------
 function update() {
 const played = roundCount;
@@ -29,14 +29,14 @@ const played = roundCount;
       const winRate = played === 0 ? 0 : Math.round((wins / played) * 100);
       $progressMessage.textContent = `進捗：${played}/5戦 現在：${wins}勝（勝率 ${winRate}%）`;
 
-    if (roundCount >= 5) {
+    if (roundCount >= MAX_ROUNDS) {
             $rock.disabled = true;
             $scissors.disabled = true;
             $paper.disabled = true;
             $retryButton.disabled = false;
-            $finalResult.textContent = this.winCount >= 3
-            ? `あなたの勝ち！(${winCount}勝 / 5戦)`
-            : `あなたの負け…(${winCount}勝 / 5戦)`;
+            $finalResult.textContent = winCount >= 3
+            ? `あなたの勝ち！(${winCount}勝 / ${MAX_ROUNDS}戦)`
+            : `あなたの負け…(${winCount}勝  / ${MAX_ROUNDS}戦)`;
         } else {
             $rock.disabled = false;
             $scissors.disabled = false;
@@ -47,7 +47,7 @@ const played = roundCount;
 }
 function getRandomHand() { return computerChoice[Math.floor(Math.random()*computerChoice.length)]; }
 function playRound(myHand) {
-    if(roundCount >= 5) return;
+    if(roundCount >= MAX_ROUNDS) return;
     let result               = '';
     const computer           = getRandomHand();
     const $li                = document.createElement('li');
