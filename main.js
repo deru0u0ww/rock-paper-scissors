@@ -1,151 +1,113 @@
-'use script';
-const JankenGame = {
-    enemyHands: [ 'rock' , 'scissors' , 'paper'],
-    elements: {},
-    _inited: false,
-    roundCount: 0,
-    winCount: 0,
-    images:'',
-    handsImage: {
+//DOM-----------------
+const $ =(sel)=> document.querySelector(sel);
+const $rock         = $('.rock');
+const $scissors     = $('.scissors');
+const $paper        = $('.paper');
+const $computerChoiceImage = $('.conputer-choiced-image');
+const $computerChoice = $('.computer-choice');
+const $myHandImage = $('.my-hands-image');
+const $retryButton = $('.retry-button');
+const $progressMessage = $('.progress-message');
+const $computerImage = $('.computer-image');
+const $historyList = $('.history');
+const $finalResult = $('.final-result');
+
+//データ
+const computerChoice = [ 'rock' , 'scissors' , 'paper'];
+const handsImage = {
         rock: './images/rock.png',
         scissors: './images/scissors.png',
-        paper: './images/paper.png'
-    },
-    rng: Math.random,
-    init( options = { }){
-        if( this._inited ) { return };
-        if( options.rng ) { this.rng = options.rng }
+        paper: './images/paper.png',
+}
 
-        if(!Array.isArray(this.enemyHands) || this.enemyHands.length === 0 ) {
-            console.warn('enemyHandsが空です');
-        } 
-        this.cacheEls();//要素取得の関数
-        this.bindBtn();//イベント処理の関数
-        this.update();
-        this.reset();
-        this._inited = true;
-    },
-    cacheEls(){
-        const get =(sel)=> {
-            const el = document.querySelector(sel);
-            if(!el) throw new Error(`必要な情報がありません: ${sel}`);
-            return el;
-        }
-        this.elements = {
-            rockBtn: get('#rock-hand'),
-            scissorsBtn: get('#scissors-hand'),
-            paperBtn: get('#paper-hand'),
-            enemyHandImage: get('#enemy-hands-image'),
-            resultText: get('#enemy-text'),
-            myHandImage: get('#my-hands-image'),
-            finalResult: get('#final-result'),
-            retryBtn: get('#retry-btn'),
-            progressText: get('#progress-text'),
-            enemyImage: get('#enemy-image'),
-            historyList: get('#history'),
-            
-        }
-    },
-    bindBtn() {
-        const { rockBtn, scissorsBtn, paperBtn, retryBtn } = this.elements;
-        rockBtn.addEventListener('click', () => this.playRound('rock'));
-        scissorsBtn.addEventListener('click', () => this.playRound('scissors'));
-        paperBtn.addEventListener('click', () => this.playRound('paper'));
-        retryBtn.addEventListener('click', () => this.reset());
+let roundCount = 0;
+let winCount = 0;
 
-        retryBtn.disabled = true;
-        
-    },
-    getRandomHand() {
-        return this.enemyHands[Math.floor(this.rng() * this.enemyHands.length)];
-    },
-    playRound( myHand ) {
-        //早期リターン
-        if (this.roundCount >= 5) return; //5回終了後は無視（ボタンは無効化してるけど二重保険をかけてる）
-        const { enemyHandImage, myHandImage, resultText,enemyImage,historyList } = this.elements;
-        const enemyHand = this.getRandomHand();
-        myHandImage.src = this.handsImage[myHand];
-        enemyHandImage.src = this.handsImage[enemyHand];
-        //変数宣言→文字列が入ることの宣言
-        let result = '';
+//関数---------------
+function update() {
+const played = roundCount;
+            const wins = winCount;
 
-        if (myHand === enemyHand) {
-            result = 'あなた：あいこ';
-            enemyImage.src = './images/thing.png';
-        } else if (
-            (myHand === 'rock' && enemyHand === 'scissors') ||
-            (myHand === 'scissors' && enemyHand === 'paper') ||
-            (myHand === 'paper' && enemyHand === 'rock')
-        ) {
-            result = 'あなた：勝ち';
-            enemyImage.src = './images/angry.png';
-            this.winCount++;
-        } else {
-            result = 'あなた：負け';
-            enemyImage.src = './images/happy.png';
-        }
-        //処理によって変数に代入してその結果を書き込みしてる！！すごい
-        resultText.textContent = result;
-        this.roundCount++;
-
-        const li = document.createElement('li');
-        li.textContent = `${this.roundCount}戦目:あなた=${myHand}、あいて=${enemyHand} → ${result}`;
-        historyList.appendChild(li);
-        this.update();
-    },
-    
-    update(){
-        const { rockBtn, scissorsBtn, paperBtn, finalResult, retryBtn, progressText} = this.elements;
-        // 途中経過（勝率・進捗）
-            const played = this.roundCount;
-            const wins = this.winCount;
-            //勝負数が０なら０、それ以外は勝率を表示
             const winRate = played === 0 ? 0 : Math.round((wins / played) * 100);
-            progressText.textContent = `進捗：${played}/5戦 現在：${wins}勝（勝率 ${winRate}%）`;
+            $progressMessage.textContent = `進捗：${played}/5戦 現在：${wins}勝（勝率 ${winRate}%）`;
 
-    if (this.roundCount >= 5) {
-        // ラウンド終了：出し手ボタンを無効・リトライを有効
-        rockBtn.disabled = true;
-        scissorsBtn.disabled = true;
-        paperBtn.disabled = true;
-        retryBtn.disabled = false;
+    if (roundCount >= 5) {
+        $rock.disabled = true;
+        $scissors.disabled = true;
+        $paper.disabled = true;
+        $retryButton.disabled = false;
 
-        finalResult.textContent = this.winCount >= 3
-            ? `あなたの勝ち！(${this.winCount}勝 / 5戦)`
-            : `あなたの負け…(${this.winCount}勝 / 5戦)`;
+        $finalResult.textContent = this.winCount >= 3
+            ? `あなたの勝ち！(${winCount}勝 / 5戦)`
+            : `あなたの負け…(${winCount}勝 / 5戦)`;
         } else {
         // 進行中：出し手ボタンを有効・リトライは無効のまま
-            rockBtn.disabled = false;
-            scissorsBtn.disabled = false;
-            paperBtn.disabled = false;
-            retryBtn.disabled = true;
-            finalResult.textContent = '';
+            $rock.disabled = false;
+            $scissors.disabled = false;
+            $paper.disabled = false;
+            $retryButton.disabled = true;
+            $finalResult.textContent = '';
         }
-  },
+}
+function getRandomHand() {
+    return computerChoice[Math.floor(Math.random()*computerChoice.length)];
+}
+function playRound(myHand) {
+    if(roundCount >= 5) return;
+    const computer = getRandomHand();
+    $myHandImage.src = handsImage[myHand];
+    $computerChoiceImage.src = `./images/${computer}.png`;
+    let result = '';
 
-  reset() {
-    const {
-      rockBtn, scissorsBtn, paperBtn,
-      enemyHandImage, myHandImage, resultText, finalResult, retryBtn, progressText,historyList,
-    } = this.elements;
+    if (myHand === computer) {
+            result = 'あなた：あいこ';
+            $computerImage.src = './images/thing.png';
+        } else if (
+            (myHand === 'rock' && computer === 'scissors') ||
+            (myHand === 'scissors' && computer === 'paper') ||
+            (myHand === 'paper' && computer === 'rock')
+        ) {
+            result = 'あなた：勝ち';
+            $computerImage.src = './images/angry.png';
+            winCount++;
+        } else {
+            result = 'あなた：負け';
+            $computerImage.src = './images/happy.png';
+        }
+        $computerChoice.textContent = result;
+        roundCount++;
 
-    this.roundCount = 0;
-    this.winCount = 0;
-
-    // 出し手ボタンは再び有効、リトライは不活性に戻す
-    rockBtn.disabled = false;
-    scissorsBtn.disabled = false;
-    paperBtn.disabled = false;
-    retryBtn.disabled = true;
-
-    // 表示クリア
-    enemyHandImage.src = './images/question.png';
-    myHandImage.src = './images/question.png';
-    resultText.textContent = '';
-    finalResult.textContent = '';
-    progressText.textContent = '進捗：0/5戦 現在：0勝（勝率 0%）';
-
-    historyList.replaceChildren();
-  }
-};
-document.addEventListener('DOMContentLoaded', ()=> { JankenGame.init()});
+        const $li = document.createElement('li');
+        $li.textContent = `${roundCount}戦目:あなた=${myHand}、あいて=${computer} → ${result}`;
+        $historyList.appendChild($li);
+        update();
+}
+function reset() {
+    roundCount = 0;
+    winCount = 0;
+    $rock.disabled = false;
+    $scissors.disabled = false;
+    $paper.disabled = false;
+    $retryButton.disabled = true;
+    $computerChoiceImage.src = './images/question.png';
+    $myHandImage.src = './images/question.png';
+    $computerImage.src = './images/thing.png';
+    $computerChoice.textContent = '何を出そうかな';
+    $finalResult.textContent = '';
+    $progressMessage.textContent = '進捗：0/5戦 現在：0勝（勝率 0%）';
+    $
+    $historyList.replaceChildren();
+}
+//イベント-------------
+$rock.addEventListener('click', function() {
+    playRound('rock');
+});
+$scissors.addEventListener('click',function() {
+    playRound('scissors');
+})
+$paper.addEventListener('click', function() {
+    playRound('paper');
+})
+$retryButton.addEventListener('click',function() {
+    reset();
+})
