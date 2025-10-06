@@ -15,33 +15,37 @@ const $finalResult          = $('.final-result');
 //データ
 const computerChoice = [ 'rock' , 'scissors' , 'paper'];
 const handsImage     = {
-        rock: './images/rock.png',
-        scissors: './images/scissors.png',
-        paper: './images/paper.png',
+        rock:       './images/rock.png',
+        scissors:   './images/scissors.png',
+        paper:      './images/paper.png',
 }
 let roundCount = 0;
 let winCount = 0;
 const MAX_ROUNDS = 5;
 //関数---------------
+function setButtonsEnabled(enabled) {
+    $rock.disabled = !enabled;
+    $scissors.disabled = !enabled;
+    $paper.disabled = !enabled;
+}
+function setRetryEnabled(enabled) {
+    $retryButton.disabled = !enabled;
+}
 function update() {
 const played = roundCount;
       const wins    = winCount;
       const winRate = played === 0 ? 0 : Math.round((wins / played) * 100);
-      $progressMessage.textContent = `進捗：${played}/5戦 現在：${wins}勝（勝率 ${winRate}%）`;
+      $progressMessage.textContent = `進捗：${played}/${MAX_ROUNDS}戦 現在：${wins}勝（勝率 ${winRate}%）`;
 
     if (roundCount >= MAX_ROUNDS) {
-            $rock.disabled = true;
-            $scissors.disabled = true;
-            $paper.disabled = true;
-            $retryButton.disabled = false;
+            setButtonsEnabled(false);
+            setRetryEnabled(true);
             $finalResult.textContent = winCount >= 3
             ? `あなたの勝ち！(${winCount}勝 / ${MAX_ROUNDS}戦)`
             : `あなたの負け…(${winCount}勝  / ${MAX_ROUNDS}戦)`;
         } else {
-            $rock.disabled = false;
-            $scissors.disabled = false;
-            $paper.disabled = false;
-            $retryButton.disabled = true;
+            setButtonsEnabled(true);
+            setRetryEnabled(false);
             $finalResult.textContent = '';
         }
 }
@@ -77,19 +81,17 @@ function playRound(myHand) {
 function reset() {
     roundCount                   = 0;
     winCount                     = 0;
-    $rock.disabled               = false;
-    $scissors.disabled           = false;
-    $paper.disabled              = false;
-    $retryButton.disabled        = true;
     $computerChoiceImage.src     = './images/question.png';
     $myHandImage.src             = './images/question.png';
     $computerImage.src           = './images/thing.png';
     $computerChoice.textContent  = '何を出そうかな';
     $finalResult.textContent     = '';
-    $progressMessage.textContent = '進捗：0/5戦 現在：0勝（勝率 0%）';
-    $
+    $progressMessage.textContent = `進捗：0/${MAX_ROUNDS}戦 現在：0勝（勝率 0%）`;
     $historyList.replaceChildren();
+    setButtonsEnabled(true);
+    setRetryEnabled(false);
 }
+update();
 //イベント-------------
 $rock.addEventListener('click', function() { playRound('rock'); });
 $scissors.addEventListener('click',function() { playRound('scissors'); });
