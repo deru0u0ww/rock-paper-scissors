@@ -59,20 +59,20 @@ const played = roundCount;
         }
 }
 function getRandomHand() { return cpuChoice[Math.floor(Math.random()*cpuChoice.length)]; }
-function playRound(myHand) {
+function playRound(my) {
     if(roundCount >= MAX_ROUNDS) return;
     let result               = '';
     const cpu                = getRandomHand();
     const $li                = document.createElement('li');
-    $myHandImage.src         = handsImage[myHand];
+    $myHandImage.src         = handsImage[my];
     $cpuChoiceImage.src      = handsImage[cpu];
-    if (myHand === cpu) {
+    if (my === cpu) {
             result = 'あなた：あいこ';
             $cpuImage.src = faceImage.thing;
         } else if (
-            (myHand === 'rock' && cpu === 'scissors') ||
-            (myHand === 'scissors' && cpu === 'paper') ||
-            (myHand === 'paper' && cpu === 'rock')
+            (my === 'rock' && cpu === 'scissors') ||
+            (my === 'scissors' && cpu === 'paper') ||
+            (my === 'paper' && cpu === 'rock')
         ) {
             result = 'あなた：勝ち';
             $cpuImage.src = faceImage.angry;
@@ -83,7 +83,7 @@ function playRound(myHand) {
         }
         $cpuChoice.textContent = result;
         roundCount++;
-        $li.textContent = `${roundCount}戦目:あなた=${handLabel[myHand]}、あいて=${handLabel[cpu]} → ${result}`;
+        $li.textContent = `${roundCount}戦目:あなた=${handLabel[my]}、あいて=${handLabel[cpu]} → ${result}`;
         $historyList.appendChild($li);
         update();
 }
