@@ -1,10 +1,6 @@
 //DOM-----------------
 const $ =(sel)=> document.querySelector(sel);
 const $handImages = document.querySelectorAll('.hand');
-// const $rock                 = $('.rock');
-// const $scissors             = $('.scissors');
-// const $paper                = $('.paper');
-
 const $cpuChoiceImage       = $('.cpu-choiced-image');
 const $cpuChoice            = $('.cpu-choice');
 const $myHandImage          = $('.my-hands-image');
@@ -13,7 +9,6 @@ const $progressMessage      = $('.progress-message');
 const $cpuImage             = $('.cpu-image');
 const $historyList          = $('.history');
 const $finalResult          = $('.final-result');
-
 //データ
 const cpuChoice =  [ 'rock' , 'scissors' , 'paper'];
 const handsImage = Object.freeze =  {
@@ -32,15 +27,15 @@ const handLabel = Object.freeze = {
     scissors: 'チョキ',
     paper: 'パー'
 }
+//中間変数
 let roundCount   = 0;
 let winCount     = 0;
+//マジックナンバーを定数化
 const MAX_ROUNDS = 5;
+const NEED_TO_WIN = Math.floor(MAX_ROUNDS / 2) +1;
 //関数---------------
 function setButtonsEnabled(enabled) {
     $handImages.forEach(img => img.style.pointerEvents = enabled ? 'auto' : 'none');
-    // $rock.disabled = !enabled;
-    // $scissors.disabled = !enabled;
-    // $paper.disabled = !enabled;
 }
 function setRetryEnabled(enabled) {
     $retryButton.disabled = !enabled;
@@ -54,7 +49,7 @@ const played = roundCount;
     if (roundCount >= MAX_ROUNDS) {
             setButtonsEnabled(false);
             setRetryEnabled(true);
-            $finalResult.textContent = winCount >= 3
+            $finalResult.textContent = winCount >= NEED_TO_WIN
             ? `あなたの勝ち！(${winCount}勝 / ${MAX_ROUNDS}戦)`
             : `あなたの負け…(${winCount}勝  / ${MAX_ROUNDS}戦)`;
         } else {
@@ -107,9 +102,6 @@ function reset() {
 }
 update();
 //イベント-------------
-// $rock.addEventListener('click', function() { playRound('rock'); });
-// $scissors.addEventListener('click',function() { playRound('scissors'); });
-// $paper.addEventListener('click', function() { playRound('paper'); });
 $handImages.forEach(img => {
     img.addEventListener('click', (e)=> {
         const myHand = e.currentTarget.dataset.hand;
