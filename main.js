@@ -13,17 +13,22 @@ const $historyList          = $('.history');
 const $finalResult          = $('.final-result');
 
 //データ
-const cpuChoice = [ 'rock' , 'scissors' , 'paper'];
-const handsImage     = {
+const cpuChoice =  [ 'rock' , 'scissors' , 'paper'];
+const handsImage = Object.freeze =  {
         rock:       './images/rock.png',
         scissors:   './images/scissors.png',
         paper:      './images/paper.png',
 }
-const faceImage      = {
+const faceImage  = Object.freeze =  {
         angry   :      './images/angry.png',
         happy   :      './images/happy.png',
         thing   :      './images/thing.png',
         question:      './images/question.png',
+}
+const handLabel = Object.freeze = {
+    rock: 'グー',
+    scissors: 'チョキ',
+    paper: 'パー'
 }
 let roundCount   = 0;
 let winCount     = 0;
@@ -80,7 +85,7 @@ function playRound(myHand) {
         }
         $cpuChoice.textContent = result;
         roundCount++;
-        $li.textContent = `${roundCount}戦目:あなた=${myHand}、あいて=${cpu} → ${result}`;
+        $li.textContent = `${roundCount}戦目:あなた=${handLabel[myHand]}、あいて=${handLabel[cpu]} → ${result}`;
         $historyList.appendChild($li);
         update();
 }
