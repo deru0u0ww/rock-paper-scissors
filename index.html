@@ -13,12 +13,15 @@
     <p class="cpu-choice">何を出そうかな</p>
     <p class="progress-message">進捗：0/5戦 現在：0勝（勝率 0%）</p>
     <p class="final-result"></p>
-
-    <img src="./images/question.png" class="cpu-choiced-image img">
-    <img src="./images/question.png" class="my-hands-image img">
-    <button class="rock">グー</button>
-    <button class="scissors">チョキ</button>
-    <button class="paper">パー</button>
+    <div class="area">
+        <img src="./images/question.png" class="cpu-choiced-image img">
+        <img src="./images/question.png" class="my-hands-image img">
+    </div>
+    <div class="my-hands">
+        <img src="./images/rock.png" alt="グー" class="hand hand--rock" data-hand="rock">
+        <img src="./images/scissors.png" alt="チョキ" class="hand hand--scissors" data-hand="scissors">
+        <img src="./images/paper.png" alt="パー" class="hand hand--paper" data-hand="paper">
+    </div>
     <button class="retry-button" disabled>もう一度挑戦</button>
     <h3>戦績履歴</h3>
     <ul class="history"></ul>

@@ -1,6 +1,25 @@
+body {
+    margin: 0;
+    padding: 0;
+}
 .img {
     width: 100px;
     height: 100px;
     display:block;
     
+}
+.hand {
+    width: 80px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+.hand:hover {
+    transform: scale(1.1);
+}
+.hand:active {
+    transform: scale(0.95);
+}
+.area {
+    border: 2rem solid #ddd;
+    margin: 0 auto;
 }

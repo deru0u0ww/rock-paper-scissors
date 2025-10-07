@@ -1,8 +1,10 @@
 //DOM-----------------
 const $ =(sel)=> document.querySelector(sel);
-const $rock                 = $('.rock');
-const $scissors             = $('.scissors');
-const $paper                = $('.paper');
+const $handImages = document.querySelectorAll('.hand');
+// const $rock                 = $('.rock');
+// const $scissors             = $('.scissors');
+// const $paper                = $('.paper');
+
 const $cpuChoiceImage       = $('.cpu-choiced-image');
 const $cpuChoice            = $('.cpu-choice');
 const $myHandImage          = $('.my-hands-image');
@@ -35,9 +37,10 @@ let winCount     = 0;
 const MAX_ROUNDS = 5;
 //関数---------------
 function setButtonsEnabled(enabled) {
-    $rock.disabled = !enabled;
-    $scissors.disabled = !enabled;
-    $paper.disabled = !enabled;
+    $handImages.forEach(img => img.style.pointerEvents = enabled ? 'auto' : 'none');
+    // $rock.disabled = !enabled;
+    // $scissors.disabled = !enabled;
+    // $paper.disabled = !enabled;
 }
 function setRetryEnabled(enabled) {
     $retryButton.disabled = !enabled;
@@ -104,7 +107,13 @@ function reset() {
 }
 update();
 //イベント-------------
-$rock.addEventListener('click', function() { playRound('rock'); });
-$scissors.addEventListener('click',function() { playRound('scissors'); });
-$paper.addEventListener('click', function() { playRound('paper'); });
+// $rock.addEventListener('click', function() { playRound('rock'); });
+// $scissors.addEventListener('click',function() { playRound('scissors'); });
+// $paper.addEventListener('click', function() { playRound('paper'); });
+$handImages.forEach(img => {
+    img.addEventListener('click', (e)=> {
+        const myHand = e.currentTarget.dataset.hand;
+        playRound(myHand);
+    });
+});
 $retryButton.addEventListener('click',function() { reset(); });
