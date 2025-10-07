@@ -33,6 +33,9 @@ let winCount     = 0;
 //マジックナンバーを定数化
 const MAX_ROUNDS = 5;
 const NEED_TO_WIN = Math.floor(MAX_ROUNDS / 2) +1;
+const SHUFFLE_MS = 700;
+const FRAME_MS = 80;
+const shuffleSeq = ['rock','scissors','paper'];
 //関数---------------
 function setButtonsEnabled(enabled) {
     $handImages.forEach(img => img.style.pointerEvents = enabled ? 'auto' : 'none');
@@ -61,12 +64,24 @@ const played = roundCount;
 function getRandomHand() { return cpuChoice[Math.floor(Math.random()*cpuChoice.length)]; }
 function playRound(my) {
     if(roundCount >= MAX_ROUNDS) return;
-    let result               = '';
-    const cpu                = getRandomHand();
     const $li                = document.createElement('li');
+    setButtonsEnabled(false);
     $myHandImage.src         = handsImage[my];
-    $cpuChoiceImage.src      = handsImage[cpu];
-    if (my === cpu) {
+    $cpuImage.src   = faceImage.thing;
+    $cpuChoice.textContent = '...考え中';
+
+    let index = 0;
+    $cpuChoiceImage.src = handsImage[shuffleSeq[index]];
+    const spinner = setInterval(function() {
+        index = (index + 1) % shuffleSeq.length;
+        $cpuChoiceImage.src = handsImage[shuffleSeq[index]];
+    },FRAME_MS);
+    setTimeout(function() {
+        clearInterval(spinner);
+        const cpu                = getRandomHand();
+        $cpuChoiceImage.src = handsImage[cpu];
+        let result               = '';
+        if (my === cpu) {
             result = 'あなた：あいこ';
             $cpuImage.src = faceImage.thing;
         } else if (
@@ -86,6 +101,11 @@ function playRound(my) {
         $li.textContent = `${roundCount}戦目:あなた=${handLabel[my]}、あいて=${handLabel[cpu]} → ${result}`;
         $historyList.appendChild($li);
         update();
+
+        if(roundCount < MAX_ROUNDS) {
+            setButtonsEnabled(true);
+        }
+    },SHUFFLE_MS);
 }
 function reset() {
     roundCount                   = 0;
